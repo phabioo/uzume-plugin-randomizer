@@ -1,16 +1,17 @@
-// Draft plugin API v1 (planned, not implemented). Sketch from FrameBeam docs/architecture/12-plugins.md section 16.6.
-// The final manifest is plain JSON without comments; the exact schema is open.
+// Draft (planned, not implemented). The final manifest is plain JSON without comments.
+// The variant build permission and the run settings schema are open until Uzume 0.22 defines them (ADR 0031 D5).
 {
-  "id": "net.framebeam.example",           // unique plugin id
-  "name": "Example",                       // display name
-  "version": "1.0.0",                      // plugin version
-  "api": 1,                                // plugin API version; unknown versions are rejected
-  "type": "script",                        // "script" (sandboxed Lua); "tool" only for signed official plugins
-  "requires": { "net.framebeam.example-core": "^1.0" },  // dependencies, loaded first
-  "provides": ["example.team"],            // interfaces other plugins may call
-  "games": [{ "system": "nds", "codes": ["ABC*"] }],     // supported systems and game codes
-  "permissions": ["memory.read", "rom.read", "ui", "run.state"],
-  "entry": "main.lua",                     // Lua entry point
-  "assets": ["icons/", "i18n/"],           // bundled files (own artwork only, no game content)
-  "settings": { }                          // schema for the generated settings page (open)
+  "id": "uzume.randomizer",                // plugin id (open: confirm with the Uzume plugin index)
+  "name": "Randomizer",                    // display name
+  "version": "0.1.0",
+  "api": 1,
+  "type": "script",
+  "games": [
+    { "system": "gb" }, { "system": "gbc" }, { "system": "gba" },
+    { "system": "nds" }, { "system": "3ds" }
+  ],                                       // narrowed to supported game codes per preset table (open)
+  "permissions": ["ui"],                   // plus the variant build permission (name open)
+  "entry": "main.lua",
+  "assets": ["i18n/"],
+  "run_settings": { }                      // mode, preset, allow own variants (schema open)
 }
