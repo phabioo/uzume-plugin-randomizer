@@ -1,5 +1,5 @@
 // Draft (planned, not implemented). The final manifest is plain JSON without comments.
-// The variant build permission and the run settings schema are open until Uzume 0.22 defines them (ADR 0031 D5).
+// The variant build permission and the run settings schema are open until Uzume 0.21 defines them (ADR 0031 D5).
 {
   "id": "uzume.randomizer",                // plugin id (open: confirm with the Uzume plugin index)
   "name": "Randomizer",                    // display name
