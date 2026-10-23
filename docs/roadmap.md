@@ -1,6 +1,6 @@
 # Roadmap
 
-Status: planned, nothing implemented. Part of Uzume milestone 0.22 "Randomizer" ([Uzume roadmap](https://github.com/phabioo/uzume/blob/main/docs/roadmap.md), [ADR 0031](https://github.com/phabioo/uzume/blob/main/docs/adr/0031-game-variants-and-randomizer.md)).
+Status: planned, nothing implemented. Part of Uzume milestone 0.21 "Randomizer" ([Uzume roadmap](https://github.com/phabioo/uzume/blob/main/docs/roadmap.md), [ADR 0031](https://github.com/phabioo/uzume/blob/main/docs/adr/0031-game-variants-and-randomizer.md)).
 
 ## Before this plugin
 

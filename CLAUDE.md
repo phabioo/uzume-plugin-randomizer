@@ -7,7 +7,7 @@ uzume-plugin-randomizer is the official Randomizer plugin for Uzume. It holds th
 ## Relation to Uzume
 
 - Plugin for [Uzume](https://github.com/phabioo/uzume) (self-hosted retro gaming platform). Decision record: `docs/adr/0031-game-variants-and-randomizer.md`; design: `docs/design/uzume/randomizer.md` (sheet 5, boards 10a to 10h); plugin interface: `docs/architecture/12-plugins.md` and `docs/guides/plugin-api.md`, all in the Uzume repository.
-- Needs Uzume 0.22: game variants, the tools catalog and the variant build permission are not built yet; everything here is design until they exist. Open API items are marked open, never invented.
+- Needs Uzume 0.21: game variants, the tools catalog and the variant build permission are not built yet; everything here is design until they exist. Open API items are marked open, never invented.
 - Runtime: Lua 5.4 in the Uzume sandbox; UI only as declarative building blocks (no QML). No sidebar row: the UI lives on the game page and in New run.
 - Engine: Universal Pokémon Randomizer FVX (GPL-3.0). It is never checked into this repository; the Uzume server downloads and pins it.
 
