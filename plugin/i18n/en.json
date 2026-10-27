@@ -1,0 +1,17 @@
+{
+  "loaded": "Randomizer {version} loaded.",
+  "register_failed": "Could not register presets and games with Uzume: {error}",
+  "title": "Randomizer",
+  "supported": "Supported",
+  "not_supported": "Not supported",
+  "supported_line": "{title} can be randomized.",
+  "unsupported_line": "{title} can't be randomized.",
+  "unsupported_generic": "This game can't be randomized.",
+  "slot_note": "Each variant plays in its own slot. Main is not touched.",
+  "preset_nuzlocke_label": "Nuzlocke friendly",
+  "preset_nuzlocke_hint": "Fair start, game stays finishable",
+  "preset_classic_label": "Classic",
+  "preset_classic_hint": "Creatures and items shuffled",
+  "preset_chaos_label": "Chaos",
+  "preset_chaos_hint": "Everything that can change"
+}

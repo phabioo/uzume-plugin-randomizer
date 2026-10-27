@@ -1,0 +1,20 @@
+{
+  "id": "uzume.randomizer",
+  "name": "Randomizer",
+  "version": "0.1.0",
+  "api": 1,
+  "type": "script",
+  "games": [
+    { "system": "gb" },
+    { "system": "gbc" },
+    { "system": "gba" },
+    { "system": "nds" },
+    { "system": "3ds" }
+  ],
+  "permissions": ["ui", "variants.build"],
+  "entry": "main.lua",
+  "assets": ["i18n/"],
+  "ui": {
+    "detail": true
+  }
+}

@@ -7,7 +7,7 @@ uzume-plugin-randomizer is the official Randomizer plugin for Uzume. It holds th
 ## Relation to Uzume
 
 - Plugin for [Uzume](https://github.com/phabioo/uzume) (self-hosted retro gaming platform). Decision record: `docs/adr/0031-game-variants-and-randomizer.md`; design: `docs/design/uzume/randomizer.md` (sheet 5, boards 10a to 10h); plugin interface: `docs/architecture/12-plugins.md` and `docs/guides/plugin-api.md`, all in the Uzume repository.
-- Needs Uzume 0.21: game variants, the tools catalog and the variant build permission are not built yet; everything here is design until they exist. Open API items are marked open, never invented.
+- Needs Uzume 0.21 (game variants, tools catalog, permission `variants.build`). Open API items are marked open, never invented.
 - Runtime: Lua 5.4 in the Uzume sandbox; UI only as declarative building blocks (no QML). No sidebar row: the UI lives on the game page and in New run.
 - Engine: Universal Pokémon Randomizer FVX (GPL-3.0). It is never checked into this repository; the Uzume server downloads and pins it.
 
@@ -34,7 +34,8 @@ uzume-plugin-randomizer is the official Randomizer plugin for Uzume. It holds th
 
 ## Status and commands
 
-- Status: no code yet. Commands (test, lint, package) will be added here when they exist; list only commands that have been run.
+- Status: v0.1.0: registers presets (settings strings of FVX 1.6.2, settings version 428) and the supported games with Uzume through `fb.variants.register` (permission `variants.build`, Uzume 0.21) and shows a status card in the game detail. Written against the API contract and a fake `fb`; not yet run in a real Uzume 0.21. Layout: `docs/architecture.md`; presets: `docs/presets.md`.
+- Sources are modules in `src/`; `lua5.4 tools/bundle.lua` generates the committed `plugin/main.lua` (list new modules in `src/modules.txt`; `--check` fails when stale). Tests: `lua5.4 tests/run.lua` (fake `fb` in `tests/support/fb_mock.lua`); `python3 -I -m unittest discover -s tests/tools`. Package: `python3 -I tools/package.py [--out DIR] [--tag vX.Y.Z]`, `--verify FILE`; a tag `vX.Y.Z` builds the `.fbplugin` release asset (`.github/workflows/release.yml`).
 - The SessionStart hook `.claude/hooks/session-start.sh` only prepares cloud sessions (installs `lua5.4` via apt if missing).
 
 ## Pointers
