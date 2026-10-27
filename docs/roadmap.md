@@ -1,6 +1,6 @@
 # Roadmap
 
-Status: planned, nothing implemented. Part of Uzume milestone 0.21 "Randomizer" ([Uzume roadmap](https://github.com/phabioo/uzume/blob/main/docs/roadmap.md), [ADR 0031](https://github.com/phabioo/uzume/blob/main/docs/adr/0031-game-variants-and-randomizer.md)).
+Status: v0.1.0 is implemented against the Uzume 0.21 API contract (`fb.variants.register`, permission `variants.build`) and a fake `fb`; not yet tried in a real Uzume 0.21. Part of Uzume milestone 0.21 "Randomizer" ([Uzume roadmap](https://github.com/phabioo/uzume/blob/main/docs/roadmap.md), [ADR 0031](https://github.com/phabioo/uzume/blob/main/docs/adr/0031-game-variants-and-randomizer.md)).
 
 ## Before this plugin
 
@@ -9,14 +9,18 @@ These come first in Uzume and are not built here:
 - Spike: determinism of the engine per system and a 3DS LayeredFS folder in the slot's Azahar dir.
 - Game variants with their own save slots, the tools catalog (the server offers the engine like cores), 3DS updates, and the variant build permission for signed official plugins.
 
-## v0.1
+## v0.1 (done, against the contract)
 
-- Manifest with the variant build permission (name open until Uzume defines it).
-- Presets as settings strings per engine version: Nuzlocke friendly, Classic, Chaos, Custom (paste a string); all generations from Gen 1 to 7.
-- Randomize dialog (10b) and the variant list on the game page (10a), build progress and states (10c, 10d), from the plugin's building blocks where Uzume does not draw them itself.
-- Run setting in New run (10e): Off, each person gets their own, same world for everyone; preset; allow own variants.
-- Spoiler log only on request (10a-3f, 10f-5f).
-- i18n English and German; tests with synthetic data only.
+- Manifest with the permissions `ui` and `variants.build`, detail slot, no run settings (Uzume draws the run section).
+- Presets as settings strings per settings version: Nuzlocke friendly, Classic, Chaos (FVX 1.6.2, settings version 428; Custom is added by Uzume); supported games Gen 1 to 7 ([docs/presets.md](presets.md), [docs/architecture.md](architecture.md)).
+- Status card in the game detail ("Supported" or "Not supported", "<title> can't be randomized.", slot note).
+- i18n English and German; tests with synthetic data and a fake `fb`.
+
+## Next
+
+- Try it in Uzume 0.21 (dev-linked) as soon as `fb.variants` exists there; check the real game codes of Gen 2 and Yellow.
+- Labels are translated at load time; check how Uzume picks the language in the shell context.
+- Optional: show the variants of the current game in the card (`fb.variants.list`) and the engine state (`fb.variants.engine`).
 
 ## Later
 

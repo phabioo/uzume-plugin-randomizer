@@ -1,0 +1,5 @@
+# Modules bundled into plugin/main.lua (see tools/bundle.lua)
+card
+games
+main
+presets
