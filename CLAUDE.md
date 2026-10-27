@@ -35,7 +35,7 @@ uzume-plugin-randomizer is the official Randomizer plugin for Uzume. It holds th
 ## Status and commands
 
 - Status: v0.1.0: registers presets (settings strings of FVX 1.6.2, settings version 428) and the supported games with Uzume through `fb.variants.register` (permission `variants.build`, Uzume 0.21) and shows a status card in the game detail. Written against the API contract and a fake `fb`; not yet run in a real Uzume 0.21. Layout: `docs/architecture.md`; presets: `docs/presets.md`.
-- Sources are modules in `src/`; `lua5.4 tools/bundle.lua` generates the committed `plugin/main.lua` (list new modules in `src/modules.txt`; `--check` fails when stale). Tests: `lua5.4 tests/run.lua` (fake `fb` in `tests/support/fb_mock.lua`); `python3 -I -m unittest discover -s tests/tools`. Package: `python3 -I tools/package.py [--out DIR] [--tag vX.Y.Z]`, `--verify FILE`; a tag `vX.Y.Z` builds the `.fbplugin` release asset (`.github/workflows/release.yml`).
+- Sources are modules in `src/`; `lua5.4 tools/bundle.lua` generates the committed `plugin/main.lua` (list new modules in `src/modules.txt`; `--check` fails when stale). Tests: `lua5.4 tests/run.lua` (fake `fb` in `tests/support/fb_mock.lua`); `python3 -I -m unittest discover -s tests/tools`. Package: `python3 -I tools/package.py [--out DIR] [--tag vX.Y.Z]`, `--verify FILE`; a tag `vX.Y.Z` builds the `.uzplugin` release asset (`.github/workflows/release.yml`).
 - The SessionStart hook `.claude/hooks/session-start.sh` only prepares cloud sessions (installs `lua5.4` via apt if missing).
 
 ## Pointers
