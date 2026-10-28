@@ -1,5 +1,5 @@
 local t = require("t")
-local mock = require("fb_mock")
+local mock = require("uz_mock")
 local games = require("games")
 
 local function texts(tree, out)

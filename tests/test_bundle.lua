@@ -1,5 +1,5 @@
 local t = require("t")
-local mock = require("fb_mock")
+local mock = require("uz_mock")
 local json = require("json")
 
 local function read(path) return mock.read_file(path) end
@@ -25,7 +25,7 @@ t.case("manifest", function()
   local m = json.decode(read("plugin/manifest.json"))
   t.eq(m.id, "uzume.randomizer")
   t.eq(m.name, "Randomizer")
-  t.eq(m.version, "0.1.0")
+  t.eq(m.version, "0.1.1")
   t.eq(m.api, 1)
   t.eq(m.type, "script")
   t.eq(m.entry, "main.lua")
@@ -59,5 +59,15 @@ end)
 
 t.case("bundled plugin loads in the mock sandbox", function()
   local m = mock.load_bundle({ language = "de" })
-  t.eq(m.logs[1].text, "Randomizer 0.1.0 geladen.")
+  t.eq(m.logs[1].text, "Randomizer 0.1.1 geladen.")
+end)
+
+t.case("old apps with only the global fb still start the bundled plugin", function()
+  local m = mock.new({ language = "de" })
+  _G.uz, _G.fb = nil, m.uz
+  local chunk = assert(loadfile("plugin/main.lua"))
+  local ok, err = pcall(chunk)
+  _G.fb = nil
+  assert(ok, err)
+  t.eq(m.logs[1].text, "Randomizer 0.1.1 geladen.")
 end)

@@ -1,6 +1,6 @@
 # Architecture
 
-At a glance: the plugin supplies data; Uzume 0.21 does the work. At load it calls `fb.variants.register` once (engine `randomizer`, three presets, the supported games) and then only shows a small status card in the game detail. Dialogs, variant list, builds, progress and the New run section are drawn by Uzume. The plugin never randomizes anything and never sees what was randomized.
+At a glance: the plugin supplies data; Uzume 0.21 does the work. At load it calls `uz.variants.register` once (engine `randomizer`, three presets, the supported games) and then only shows a small status card in the game detail. Dialogs, variant list, builds, progress and the New run section are drawn by Uzume. The plugin never randomizes anything and never sees what was randomized.
 
 ## Modules (`src/`, bundled into `plugin/main.lua` by `tools/bundle.lua`)
 
