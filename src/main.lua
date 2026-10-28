@@ -36,7 +36,10 @@ end
 local ok, err = pcall(uz.variants.register, { engine = "randomizer", presets = preset_list(), games = game_list() })
 if not ok then uz.log.error(t("register_failed", { error = tostring(err) })) end
 
-uz.events.on("uz", "detail.game", function(game)
+-- Host event source: "uz" since Uzume 0.22; older apps only know "fb".
+local host = rawget(_ENV, "uz") ~= nil and "uz" or "fb"
+
+uz.events.on(host, "detail.game", function(game)
   if type(game) ~= "table" then
     uz.ui.clear("detail")
     return

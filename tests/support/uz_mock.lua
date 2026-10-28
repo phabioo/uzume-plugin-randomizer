@@ -85,9 +85,10 @@ function M.new(opts)
     end,
   }
   --- Deliver a host event: mock.fire("detail.game", { system = ..., code = ..., title = ... }).
-  function mock.fire(name, value)
-    local fn = mock.handlers["uz:" .. name]
-    if fn then fn(deep_copy(value), "uz", name) end
+  function mock.fire(name, value, source)
+    source = source or "uz"
+    local fn = mock.handlers[source .. ":" .. name]
+    if fn then fn(deep_copy(value), source, name) end
   end
 
   local function need(p)

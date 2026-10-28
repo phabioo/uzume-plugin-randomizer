@@ -70,4 +70,14 @@ t.case("old apps with only the global fb still start the bundled plugin", functi
   _G.fb = nil
   assert(ok, err)
   t.eq(m.logs[1].text, "Randomizer 0.1.1 geladen.")
+  t.ok(m.handlers["fb:detail.game"], "subscribes to source fb")
+  t.ok(not m.handlers["uz:detail.game"], "no uz subscription")
+  m.fire("detail.game", { system = "nds", code = "XXXX", title = "Demo" }, "fb")
+  t.ok(m.trees.detail, "detail card rendered from an fb event")
+end)
+
+t.case("apps with the global uz subscribe to source uz", function()
+  local m = mock.load_bundle({ language = "de" })
+  t.ok(m.handlers["uz:detail.game"], "subscribes to source uz")
+  t.ok(not m.handlers["fb:detail.game"], "no fb subscription")
 end)
