@@ -2,6 +2,10 @@
 
 Status: v0.1.1 (API namespace `uz`, falls back to `fb` on older apps); v0.1.0 is implemented against the Uzume 0.21 API contract (`uz.variants.register`, permission `variants.build`) and a fake `uz`; not yet tried in a real Uzume 0.21. Part of Uzume milestone 0.21 "Randomizer" ([Uzume roadmap](https://github.com/phabioo/uzume/blob/main/docs/roadmap.md), [ADR 0031](https://github.com/phabioo/uzume/blob/main/docs/adr/0031-game-variants-and-randomizer.md)).
 
+## Open work
+
+Open work is tracked as issues: [issues](https://github.com/phabioo/uzume-plugin-randomizer/issues) and the [milestones](https://github.com/phabioo/uzume-plugin-randomizer/milestones).
+
 ## Before this plugin
 
 These come first in Uzume and are not built here:
@@ -18,10 +22,8 @@ These come first in Uzume and are not built here:
 
 ## Next
 
-- Try it in Uzume 0.21 (dev-linked) as soon as `uz.variants` exists there; check the real game codes of Gen 2 and Yellow.
-- Labels are translated at load time; check how Uzume picks the language in the shell context.
-- Optional: show the variants of the current game in the card (`uz.variants.list`) and the engine state (`uz.variants.engine`).
+- Labels are translated at load time; check how Uzume picks the language in the shell context (no issue yet).
 
 ## Later
 
-- SoulLink integration lives in the SoulLink repositories (show the variant in the run, read encounters from the variant).
+Direction: SoulLink integration lives in the SoulLink repositories (show the variant in the run, read encounters from the variant).

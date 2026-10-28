@@ -40,5 +40,5 @@ uzume-plugin-randomizer is the official Randomizer plugin for Uzume. It holds th
 
 ## Pointers
 
-- Plan and status: `docs/roadmap.md`. Workflow, roles and brief template: `docs/workflow.md`.
+- Open work: GitHub issues and milestones; direction and history: `docs/roadmap.md`. Workflow, roles and brief template: `docs/workflow.md`.
 - Uzume docs: https://github.com/phabioo/uzume (`docs/adr/0031-game-variants-and-randomizer.md`, `docs/design/uzume/randomizer.md`, `docs/architecture/12-plugins.md`).
