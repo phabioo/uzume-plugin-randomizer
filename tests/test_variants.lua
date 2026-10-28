@@ -1,5 +1,5 @@
 local t = require("t")
-local mock = require("fb_mock")
+local mock = require("uz_mock")
 local presets = require("presets")
 
 t.case("register is called once with engine, three presets and the games", function()

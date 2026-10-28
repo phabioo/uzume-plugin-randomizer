@@ -1,4 +1,4 @@
--- Fake `fb` for tests: i18n from plugin/i18n, events, fb.ui (validated), and the contract of fb.variants.
+-- Fake `uz` for tests: i18n from plugin/i18n, events, uz.ui (validated), and the contract of uz.variants.
 local validator = require("ui_validator")
 local M = {}
 
@@ -57,13 +57,13 @@ function M.new(opts)
   opts = opts or {}
   local perms = opts.permissions or { ui = true, ["variants.build"] = true }
   local mock = { logs = {}, handlers = {}, trees = {}, registered = {}, register_calls = 0 }
-  local fb = { api = 1, plugin = { id = "uzume.randomizer", version = "0.1.0" }, game = {} }
-  if opts.language then fb.game.language = opts.language end
-  mock.fb = fb
+  local uz = { api = 1, plugin = { id = "uzume.randomizer", version = "0.1.1" }, game = {} }
+  if opts.language then uz.game.language = opts.language end
+  mock.uz = uz
 
   local en = M.read_json_flat(read_file("plugin/i18n/en.json"))
   local lang = opts.language and M.read_json_flat(read_file("plugin/i18n/" .. opts.language .. ".json")) or {}
-  fb.i18n = {
+  uz.i18n = {
     t = function(key, vars)
       local s = lang[key] or en[key] or key
       return (s:gsub("{(%w+)}", function(name) return vars and vars[name] ~= nil and tostring(vars[name]) or nil end))
@@ -77,24 +77,25 @@ function M.new(opts)
       mock.logs[#mock.logs + 1] = { level = level, text = table.concat(parts, "\t") }
     end
   end
-  fb.log = { debug = log("debug"), info = log("info"), warn = log("warn"), error = log("error") }
+  uz.log = { debug = log("debug"), info = log("info"), warn = log("warn"), error = log("error") }
 
-  fb.events = {
+  uz.events = {
     on = function(plugin_id, name, fn)
       mock.handlers[plugin_id .. ":" .. name] = fn
     end,
   }
   --- Deliver a host event: mock.fire("detail.game", { system = ..., code = ..., title = ... }).
-  function mock.fire(name, value)
-    local fn = mock.handlers["fb:" .. name]
-    if fn then fn(deep_copy(value), "fb", name) end
+  function mock.fire(name, value, source)
+    source = source or "uz"
+    local fn = mock.handlers[source .. ":" .. name]
+    if fn then fn(deep_copy(value), source, name) end
   end
 
   local function need(p)
     if not perms[p] then error("permission " .. p .. " not granted", 3) end
   end
 
-  fb.ui = {
+  uz.ui = {
     set = function(slot, tree)
       need("ui")
       assert(slot == "detail", "slot " .. tostring(slot) .. " not declared in manifest")
@@ -108,7 +109,7 @@ function M.new(opts)
     end,
   }
 
-  fb.variants = {
+  uz.variants = {
     register = function(spec)
       need("variants.build")
       mock.register_calls = mock.register_calls + 1
@@ -128,13 +129,13 @@ function M.new(opts)
   return mock
 end
 
---- Loads the bundled plugin/main.lua into a fresh mock (global `fb` only during the load).
+--- Loads the bundled plugin/main.lua into a fresh mock (global `uz` only during the load).
 function M.load_bundle(opts)
   local m = M.new(opts)
-  _G.fb = m.fb
+  _G.uz = m.uz
   local chunk = assert(loadfile("plugin/main.lua"))
   local ok, err = pcall(chunk)
-  _G.fb = nil
+  _G.uz = nil
   assert(ok, err)
   return m
 end
