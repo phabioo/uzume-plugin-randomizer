@@ -52,12 +52,12 @@ local function deep_copy(v)
   return c
 end
 
--- opts: language ("en"/"de"), permissions (set; default ui + variants.build), register_error (string).
+-- opts: variants_list, engine, no_list, no_engine, list_error (see uz.variants below), language ("en"/"de"), permissions (set; default ui + variants.build), register_error (string).
 function M.new(opts)
   opts = opts or {}
   local perms = opts.permissions or { ui = true, ["variants.build"] = true }
   local mock = { logs = {}, handlers = {}, trees = {}, registered = {}, register_calls = 0 }
-  local uz = { api = 1, plugin = { id = "uzume.randomizer", version = "0.1.1" }, game = {} }
+  local uz = { api = 1, plugin = { id = "uzume.randomizer", version = "0.2.0" }, game = {} }
   if opts.language then uz.game.language = opts.language end
   mock.uz = uz
 
@@ -122,9 +122,22 @@ function M.new(opts)
       mock.registered = deep_copy(spec)
       return true
     end,
-    list = function() need("variants.build"); return {} end,
-    engine = function() need("variants.build"); return { offered = true, version = "1.6.2", on_pc = false } end,
+    list = function(game_id)
+      need("variants.build")
+      mock.list_calls = (mock.list_calls or 0) + 1
+      mock.list_game_id = game_id
+      if game_id == nil then return {} end -- shell context contract: no game id, no list
+      return opts.variants_list or {}
+    end,
+    engine = function()
+      need("variants.build")
+      return opts.engine or { offered = true, version = "1.6.2", on_pc = false }
+    end,
   }
+  -- Older apps: opts.no_list / opts.no_engine remove the function; opts.list_error makes list raise.
+  if opts.no_list then uz.variants.list = nil end
+  if opts.no_engine then uz.variants.engine = nil end
+  if opts.list_error then uz.variants.list = function() error("no_game", 2) end end
 
   return mock
 end

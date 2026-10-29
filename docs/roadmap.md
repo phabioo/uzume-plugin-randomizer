@@ -1,6 +1,6 @@
 # Roadmap
 
-Status: v0.1.1 (API namespace `uz`, falls back to `fb` on older apps); v0.1.0 is implemented against the Uzume 0.21 API contract (`uz.variants.register`, permission `variants.build`) and a fake `uz`; not yet tried in a real Uzume 0.21. Part of Uzume milestone 0.21 "Randomizer" ([Uzume roadmap](https://github.com/phabioo/uzume/blob/main/docs/roadmap.md), [ADR 0031](https://github.com/phabioo/uzume/blob/main/docs/adr/0031-game-variants-and-randomizer.md)).
+Status: v0.2.0 (status card with engine state and variants of the game); v0.1.1 (API namespace `uz`, falls back to `fb` on older apps); v0.1.0 is implemented against the Uzume 0.21 API contract (`uz.variants.register`, permission `variants.build`) and a fake `uz`; not yet tried in a real Uzume 0.21. Part of Uzume milestone 0.21 "Randomizer" ([Uzume roadmap](https://github.com/phabioo/uzume/blob/main/docs/roadmap.md), [ADR 0031](https://github.com/phabioo/uzume/blob/main/docs/adr/0031-game-variants-and-randomizer.md)).
 
 ## Open work
 

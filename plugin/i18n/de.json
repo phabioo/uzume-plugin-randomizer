@@ -13,5 +13,16 @@
   "preset_classic_label": "Klassisch",
   "preset_classic_hint": "Kreaturen und Items gemischt",
   "preset_chaos_label": "Chaos",
-  "preset_chaos_hint": "Alles, was sich ändern lässt"
+  "preset_chaos_hint": "Alles, was sich ändern lässt",
+  "engine_not_offered": "Der Server bietet die Randomizer-Engine nicht an.",
+  "engine_ready": "Engine {version} ist auf diesem PC bereit.",
+  "engine_download": "Engine {version} wird angeboten und ist noch nicht auf diesem PC.",
+  "variants_title": "Deine Varianten",
+  "variants_none": "Du hast noch keine Varianten dieses Spiels.",
+  "variants_more": "und {n} weitere",
+  "state_not_built": "nicht gebaut",
+  "state_building": "wird gebaut",
+  "state_ready": "bereit",
+  "state_needs_rebuild": "muss neu gebaut werden",
+  "state_failed": "fehlgeschlagen"
 }

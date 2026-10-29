@@ -7,7 +7,7 @@ At a glance: the plugin supplies data; Uzume 0.21 does the work. At load it call
 - `main`: logs, registers presets and games (a failed call is logged, not fatal), subscribes to the host event `detail.game`.
 - `presets`: settings strings keyed by settings version, preset order. Labels and hints come from `i18n/` at registration time.
 - `games`: the supported-games table and the matcher.
-- `card`: builds the `detail` tree (section, status badge, one line, slot note).
+- `card`: builds the `detail` tree (section, status badge, one line, slot note; for supported games also the engine line from `uz.variants.engine()` and a list of the user's variants from `uz.variants.list()`: name and state only, at most 5, never seeds, settings, presets or slots; both calls are optional and guarded). `main` refreshes the card on the host event `variants.state`.
 
 ## Game code mapping (assumption)
 
