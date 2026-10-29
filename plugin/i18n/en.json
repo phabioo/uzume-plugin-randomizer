@@ -13,5 +13,16 @@
   "preset_classic_label": "Classic",
   "preset_classic_hint": "Creatures and items shuffled",
   "preset_chaos_label": "Chaos",
-  "preset_chaos_hint": "Everything that can change"
+  "preset_chaos_hint": "Everything that can change",
+  "engine_not_offered": "The server does not offer the randomizer engine.",
+  "engine_ready": "Engine {version} is ready on this PC.",
+  "engine_download": "Engine {version} is offered and not on this PC yet.",
+  "variants_title": "Your variants",
+  "variants_none": "You have no variants of this game yet.",
+  "variants_more": "and {n} more",
+  "state_not_built": "not built",
+  "state_building": "building",
+  "state_ready": "ready",
+  "state_needs_rebuild": "needs a rebuild",
+  "state_failed": "failed"
 }

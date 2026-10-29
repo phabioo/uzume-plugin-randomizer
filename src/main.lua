@@ -39,10 +39,38 @@ if not ok then uz.log.error(t("register_failed", { error = tostring(err) })) end
 -- Host event source: "uz" since Uzume 0.22; older apps only know "fb".
 local host = rawget(_ENV, "uz") ~= nil and "uz" or "fb"
 
+-- Variants and engine state for the card. Both calls are optional (older apps, shell context without a game):
+-- a missing function or a failed call leaves that part out of the card.
+local function card_info(game)
+  local info = {}
+  local v = uz.variants
+  if type(v.engine) == "function" then
+    local ok, e = pcall(v.engine)
+    if ok and type(e) == "table" then info.engine = e end
+  end
+  -- The list needs the game id from detail.game (Uzume 22); without it (older apps) the list is left out.
+  if type(v.list) == "function" and game.id ~= nil then
+    local ok, l = pcall(v.list, game.id)
+    if ok and type(l) == "table" then info.variants = l end
+  end
+  return info
+end
+
+local current
+
+local function show()
+  if current then uz.ui.set("detail", card.build(t, current, card_info(current))) end
+end
+
 uz.events.on(host, "detail.game", function(game)
   if type(game) ~= "table" then
+    current = nil
     uz.ui.clear("detail")
     return
   end
-  uz.ui.set("detail", card.build(t, game))
+  current = game
+  show()
 end)
+
+-- A build changed state: refresh the card (the event carries no game data we use).
+uz.events.on(host, "variants.state", function() pcall(show) end)
