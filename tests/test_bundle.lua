@@ -25,12 +25,12 @@ t.case("manifest", function()
   local m = json.decode(read("plugin/manifest.json"))
   t.eq(m.id, "uzume.randomizer")
   t.eq(m.name, "Randomizer")
-  t.eq(m.version, "0.2.0")
+  t.eq(m.version, "0.3.0")
   t.eq(m.api, 1)
   t.eq(m.type, "script")
   t.eq(m.entry, "main.lua")
-  t.eq(m.permissions, { "ui", "variants.build" })
-  t.eq(m.ui, { detail = true })
+  t.eq(m.permissions, { "ui", "variants.build", "store" })
+  t.eq(m.ui, { detail = true, screen = { title = "Randomizer" } })
   t.ok(m.run_settings == nil, "no run settings: Uzume draws the run section")
   local systems = {}
   for _, g in ipairs(m.games) do systems[g.system] = true end
@@ -59,7 +59,7 @@ end)
 
 t.case("bundled plugin loads in the mock sandbox", function()
   local m = mock.load_bundle({ language = "de" })
-  t.eq(m.logs[1].text, "Randomizer 0.2.0 geladen.")
+  t.eq(m.logs[1].text, "Randomizer 0.3.0 geladen.")
 end)
 
 t.case("old apps with only the global fb still start the bundled plugin", function()
@@ -69,7 +69,7 @@ t.case("old apps with only the global fb still start the bundled plugin", functi
   local ok, err = pcall(chunk)
   _G.fb = nil
   assert(ok, err)
-  t.eq(m.logs[1].text, "Randomizer 0.2.0 geladen.")
+  t.eq(m.logs[1].text, "Randomizer 0.3.0 geladen.")
   t.ok(m.handlers["fb:detail.game"], "subscribes to source fb")
   t.ok(not m.handlers["uz:detail.game"], "no uz subscription")
   m.fire("detail.game", { system = "nds", code = "XXXX", title = "Demo" }, "fb")

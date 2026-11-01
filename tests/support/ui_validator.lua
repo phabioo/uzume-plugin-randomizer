@@ -51,7 +51,7 @@ end
 
 local gap = num
 local SPEC = {
-  column = { gap = gap, align = enum("start", "center", "end", "stretch") },
+  column = { gap = gap, align = enum("start", "center", "end", "stretch"), width = enum("dialog") },
   row = { gap = gap, align = enum("start", "center", "end", "stretch") },
   grid = { gap = gap, columns = int_in(1, 6) },
   tabs = { tabs = list_of(text200, 1, 12), selected = int_in(1, 12), action = action, _req = { "tabs" } },
@@ -77,7 +77,7 @@ local SPEC = {
       for _, r in ipairs(v) do if not table_row_ok(r) then return false end end
       return true
     end, _req = { "columns", "rows" } },
-  button = { label = text200, action = action, variant = enum("primary", "secondary", "quiet", "danger"), value = plain,
+  button = { label = text200, action = action, variant = enum("primary", "secondary", "quiet", "danger"), value = plain, disabled = bool,
              confirm = function(c)
                if type(c) ~= "table" or type(c.title) ~= "string" or type(c.text) ~= "string" then return false end
                for k in pairs(c) do
@@ -85,10 +85,11 @@ local SPEC = {
                end
                return true
              end, _req = { "label", "action" } },
-  toggle = { action = action, label = text200, checked = bool, _req = { "action" } },
-  select = { options = list_of(option, 1, 100), selected = function(v) return v ~= nil end, action = action, _req = { "options", "action" } },
+  toggle = { action = action, label = text200, accessible = text200, checked = bool, value = plain, disabled = bool, _req = { "action" } },
+  select = { options = list_of(option, 1, 100), selected = function(v) return v ~= nil end, action = action, disabled = bool, _req = { "options", "action" } },
   segmented = { options = list_of(option, 2, 3), selected = function(v) return v ~= nil end, action = action, _req = { "options", "action" } },
-  textfield = { action = action, text = text2000, placeholder = text200, error = text200, _req = { "action" } },
+  textfield = { action = action, text = text2000, placeholder = text200, error = text200, live = bool, mono = bool, disabled = bool, _req = { "action" } },
+  textarea = { value = str(65536), lines = int_in(1, 40), mono = bool, placeholder = text200, error = text200, action = action, disabled = bool },
   empty = { title = text200, text = text2000, action_label = text200, action = action, tone = tone, _req = { "title" } },
   location = { title = text200, sub = text200, status = enum("open", "encounter", "caught", "missed", "none"), _req = { "title" } },
   map = { image = text200, image_w = int_in(1, 16384), image_h = int_in(1, 16384), players = plain, routes = plain,
@@ -129,6 +130,12 @@ local function check(b, path, depth)
       if not ok then return nil, err end
     end
   end
+  if (b.type == "select" or b.type == "segmented") and b.selected ~= nil then
+    local found = false
+    for _, o in ipairs(b.options) do if o.value == b.selected then found = true end end
+    if not found then return nil, path .. ".selected: not one of the options" end
+  end
+  if b.type == "tabs" and b.selected and b.selected > #b.tabs then return nil, path .. ".selected: beyond the tabs" end
   if b.type == "tabs" and b.children and #b.children > #b.tabs then return nil, path .. ": more pages than tabs" end
   if b.type == "table" then
     for i, r in ipairs(b.rows) do
@@ -138,10 +145,24 @@ local function check(b, path, depth)
   return true
 end
 
+-- Total size of all strings, the documented limit is 512 KiB per slot.
+local function bytes(v)
+  if type(v) == "string" then return #v end
+  local n = 0
+  if type(v) == "table" then for _, x in pairs(v) do n = n + bytes(x) end end
+  return n
+end
+
 function V.validate(tree)
   count, ids = 0, {}
-  return check(tree, "tree", 1)
+  local ok, err = check(tree, "tree", 1)
+  if not ok then return ok, err end
+  if bytes(tree) > 512 * 1024 then return nil, "tree: more than 512 KiB" end
+  return true
 end
+
+--- Number of blocks of the last validated tree.
+function V.last_count() return count end
 
 --- Find a block by id in a tree (for tests).
 function V.find(tree, id)

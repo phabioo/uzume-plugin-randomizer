@@ -1,6 +1,6 @@
 # Presets
 
-At a glance: the three presets of the plugin are settings strings of the Universal Pokémon Randomizer FVX (GPL-3.0), engine version 1.6.2, settings version 428. They live in `src/presets.lua`, keyed by settings version. Uzume adds the fourth entry, "Custom" (paste a string), itself.
+At a glance: the three presets of the plugin are settings strings of the Universal Pokémon Randomizer FVX (GPL-3.0), engine version 1.6.2, settings version 428. They live in `src/presets.lua`, keyed by settings version. Uzume adds the fourth entry, "Custom" (paste a string), itself. The person's own presets come from the options editor of the plugin (see [architecture](architecture.md)).
 
 ## How the strings were made
 
