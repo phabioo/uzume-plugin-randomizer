@@ -418,5 +418,6 @@
   "type_ice": "Eis",
   "type_steel": "Stahl",
   "type_dark": "Unlicht",
-  "type_fairy": "Fee"
+  "type_fairy": "Fee",
+  "toast_changed_text": "Dieses Preset wurde auf einem anderen PC geändert. Es wurde nichts gespeichert, deine Änderungen sind noch da. Lade das Preset neu oder speichere deine Version als neues Preset."
 }

@@ -418,5 +418,6 @@
   "type_ice": "Ice",
   "type_steel": "Steel",
   "type_dark": "Dark",
-  "type_fairy": "Fairy"
+  "type_fairy": "Fairy",
+  "toast_changed_text": "This preset changed on another PC. Nothing was saved and your edits are still here. Load the preset again, or save yours as a new preset."
 }

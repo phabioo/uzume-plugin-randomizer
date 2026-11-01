@@ -1164,7 +1164,7 @@ uz.events.on(host, "variants.state", function() pcall(show) end)
 
 local function forget_missing_preset()
   if state.editing and not own:find(state.editing) then
-    state.editing = nil
+    state.editing, state.snapshot = nil, nil
     state.base = "default"
   end
 end
@@ -1173,6 +1173,7 @@ local function load_state_from(settings, base, editing, name)
   local ok = editor.load_settings(state, settings)
   if not ok then return false end
   state.base, state.editing, state.name = base, editing, name or ""
+  state.snapshot = editing and { name = name, settings = settings } or nil
   return true
 end
 
@@ -1223,6 +1224,12 @@ local function refresh_save_buttons()
   if not ok then render() end
 end
 
+-- The preset being edited is still as it was when it was loaded (no other PC changed or deleted it).
+local function snapshot_current()
+  local cur, snap = state.editing and own:find(state.editing), state.snapshot
+  return cur ~= nil and snap ~= nil and cur.name == snap.name and cur.settings == snap.settings
+end
+
 local function handle(action, value)
   if action == "edit_options" then
     pcall(uz.ui.open, "screen")
@@ -1245,6 +1252,10 @@ local function handle(action, value)
   elseif action == "save_new" or action == "save_changes" then
     local name = editor.valid_name(state.name)
     if not name or (action == "save_changes" and not state.editing) then return end
+    if action == "save_changes" and not snapshot_current() then
+      toast("warning", t("toast_conflict_title"), t("toast_changed_text"))
+      return
+    end
     local id, code
     if action == "save_new" then
       id, code = own:add(name, editor.current_string(state))
@@ -1254,14 +1265,19 @@ local function handle(action, value)
     end
     if not id then return save_failed(code) end
     state.editing, state.base, state.name = id, "own:" .. id, name
+    state.snapshot = { name = name, settings = editor.current_string(state) }
     toast("info", t("toast_saved"), name)
     render()
   elseif action == "delete" then
     if not state.editing then return end
+    if not snapshot_current() then
+      toast("warning", t("toast_conflict_title"), t("toast_changed_text"))
+      return
+    end
     local gone = own:find(state.editing)
     local ok, code = own:remove(state.editing)
     if not ok then return save_failed(code) end
-    state.editing, state.base, state.name = nil, "default", ""
+    state.editing, state.base, state.name, state.snapshot = nil, "default", "", nil
     toast("info", t("toast_deleted"), gone and gone.name or t("own_hint"))
     render()
   end
