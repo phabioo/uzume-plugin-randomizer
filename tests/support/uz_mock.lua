@@ -52,12 +52,13 @@ local function deep_copy(v)
   return c
 end
 
--- opts: variants_list, engine, no_list, no_engine, list_error (see uz.variants below), language ("en"/"de"), permissions (set; default ui + variants.build), register_error (string).
+-- opts: store (initial data { key = value }), no_store (older app without uz.store), store_put_error (code for every put), store_get_error (get raises), variants_list, engine, no_list, no_engine, list_error (see uz.variants below), language ("en"/"de"), permissions (set; default ui + variants.build + store), register_error (string).
 function M.new(opts)
   opts = opts or {}
-  local perms = opts.permissions or { ui = true, ["variants.build"] = true }
-  local mock = { logs = {}, handlers = {}, trees = {}, registered = {}, register_calls = 0 }
-  local uz = { api = 1, plugin = { id = "uzume.randomizer", version = "0.2.0" }, game = {} }
+  local perms = opts.permissions or { ui = true, ["variants.build"] = true, store = true }
+  local mock = { logs = {}, handlers = {}, trees = {}, registered = {}, register_calls = 0, opened = {}, toasts = {},
+    store_data = {}, store_conflicts = {}, store_puts = 0 }
+  local uz = { api = 1, plugin = { id = "uzume.randomizer", version = "0.3.0" }, game = {} }
   if opts.language then uz.game.language = opts.language end
   mock.uz = uz
 
@@ -95,19 +96,95 @@ function M.new(opts)
     if not perms[p] then error("permission " .. p .. " not granted", 3) end
   end
 
+  local function checked(slot, tree)
+    assert(slot == "detail" or slot == "screen", "slot " .. tostring(slot) .. " not declared in manifest")
+    local ok, err = validator.validate(tree)
+    if not ok then error("ui tree: " .. tostring(err), 3) end
+    mock.last_count = validator.last_count()
+  end
+
   uz.ui = {
     set = function(slot, tree)
       need("ui")
-      assert(slot == "detail", "slot " .. tostring(slot) .. " not declared in manifest")
-      local ok, err = validator.validate(tree)
-      if not ok then error("ui tree: " .. tostring(err), 2) end
+      checked(slot, tree)
       mock.trees[slot] = deep_copy(tree)
     end,
     clear = function(slot)
       need("ui")
       mock.trees[slot] = nil
     end,
+    patch = function(slot, id, props)
+      need("ui")
+      local tree = mock.trees[slot]
+      if not tree then error("no tree in slot " .. slot, 2) end
+      local block = validator.find(tree, id)
+      if not block then error("unknown id " .. tostring(id), 2) end
+      local copy = deep_copy(tree)
+      for k, v in pairs(props) do validator.find(copy, id)[k] = v end
+      checked(slot, copy)
+      mock.trees[slot] = copy
+    end,
+    open = function(slot)
+      need("ui")
+      assert(slot == "screen" or slot == "panel", "uz.ui.open only supports the slots screen and panel")
+      mock.opened[#mock.opened + 1] = slot
+    end,
+    notify = function(spec)
+      need("ui")
+      assert(type(spec.text) == "string" and #spec.text >= 1 and #spec.text <= 300, "toast text 1 to 300 characters")
+      assert(spec.title == nil or #spec.title <= 80, "toast title")
+      mock.toasts[#mock.toasts + 1] = deep_copy(spec)
+      return #mock.toasts
+    end,
+    on_action = function(fn)
+      need("ui")
+      mock.action_handler = fn
+    end,
   }
+  --- Deliver a UI action as the app would: mock.action("set:race_mode", true, "screen").
+  function mock.action(name, value, slot)
+    assert(mock.action_handler, "no action handler")
+    mock.action_handler(name, deep_copy(value), slot or "screen")
+  end
+
+  -- uz.store with revisions. A put with a stale base_revision is refused and kept as a conflict copy.
+  if not opts.no_store then
+    for k, v in pairs(opts.store or {}) do mock.store_data[k] = { value = deep_copy(v), rev = 1 } end
+    uz.store = {
+      get = function(key)
+        need("store")
+        if opts.store_get_error then error(opts.store_get_error, 2) end
+        local e = mock.store_data[key]
+        if not e then return nil, 0 end
+        return deep_copy(e.value), e.rev
+      end,
+      put = function(key, value, base)
+        need("store")
+        mock.store_puts = mock.store_puts + 1
+        if opts.store_put_error then return nil, opts.store_put_error end
+        local e = mock.store_data[key]
+        local rev = e and e.rev or 0
+        if base ~= nil and base ~= rev then
+          mock.store_conflicts[key] = mock.store_conflicts[key] or {}
+          table.insert(mock.store_conflicts[key], { value = deep_copy(value), revision = rev, source = "local" })
+          return nil, "conflict"
+        end
+        mock.store_data[key] = { value = deep_copy(value), rev = rev + 1 }
+        mock.store_conflicts[key] = nil
+        return true, rev + 1
+      end,
+      conflicts = function(key)
+        need("store")
+        return deep_copy(mock.store_conflicts[key] or {})
+      end,
+    }
+  end
+  --- Another PC wrote the key: bumps the revision. Pass fire = true to deliver the app event store.changed.
+  function mock.external_write(key, value, fire)
+    local e = mock.store_data[key]
+    mock.store_data[key] = { value = deep_copy(value), rev = (e and e.rev or 0) + 1 }
+    if fire then mock.fire("store.changed", key, "app") end
+  end
 
   uz.variants = {
     register = function(spec)

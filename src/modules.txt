@@ -1,5 +1,8 @@
 # Modules bundled into plugin/main.lua (see tools/bundle.lua)
 card
+editor
+fvx_settings
 games
 main
+own_presets
 presets

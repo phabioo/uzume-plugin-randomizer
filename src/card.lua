@@ -66,6 +66,7 @@ function M.build(t, game, info)
     kids[#kids + 1] = { type = "text", id = "line", text = title and t("supported_line", { title = title }) or t("slot_note"), style = "body" }
     if title then kids[#kids + 1] = { type = "text", id = "slot", text = t("slot_note"), style = "meta" } end
     for _, k in ipairs(info_children(t, info or {})) do kids[#kids + 1] = k end
+    kids[#kids + 1] = { type = "button", id = "edit_options", action = "edit_options", label = t("edit_options"), variant = "secondary" }
   else
     kids[#kids + 1] = { type = "text", id = "line", style = "body",
       text = title and t("unsupported_line", { title = title }) or t("unsupported_generic") }
